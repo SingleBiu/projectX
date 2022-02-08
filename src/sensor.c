@@ -2,12 +2,11 @@
  * @Author: SingleBiu
  * @Date: 2021-09-13 09:39:33
  * @LastEditors: SingleBiu
- * @LastEditTime: 2021-09-13 11:22:27
+ * @LastEditTime: 2022-02-08 20:13:10
  * @Description: file content
  */
-#include"sensor.h"
-#include"lcd.h"
-
+#include "sensor.h"
+#include "lcd.h"
 
 // extern unsigned char w_0;
 // extern unsigned char w_1;
@@ -32,12 +31,17 @@
 // template
 // unsigned char w_word[] = {};
 
-//16x16
+//宽x高
+// 16x16
 
 // 'C
 unsigned char w_dufuhao[] = {
     0x60, 0x00, 0x91, 0xF4, 0x96, 0x0C, 0x6C, 0x04, 0x08, 0x04, 0x18, 0x00, 0x18, 0x00, 0x18, 0x00,
     0x18, 0x00, 0x18, 0x00, 0x18, 0x00, 0x08, 0x00, 0x0C, 0x04, 0x06, 0x08, 0x01, 0xF0, 0x00, 0x00};
+
+// . 8x16
+unsigned char w_dian[] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x60, 0x60, 0x00, 0x00};
 
 //湿
 unsigned char w_shi[] = {
@@ -69,7 +73,7 @@ unsigned char w_du[] = {
     0x01, 0x00, 0x00, 0x80, 0x3F, 0xFE, 0x22, 0x20, 0x22, 0x20, 0x3F, 0xFC, 0x22, 0x20, 0x22, 0x20,
     0x23, 0xE0, 0x20, 0x00, 0x2F, 0xF0, 0x24, 0x10, 0x42, 0x20, 0x41, 0xC0, 0x86, 0x30, 0x38, 0x0E};
 
-//8x16
+// 8x16
 
 // 显示冒号  “ : ”
 unsigned char w_maohao[] = {
@@ -101,6 +105,281 @@ unsigned char w_9[] = {
     0x00, 0x00, 0x00, 0x38, 0x44, 0x42, 0x42, 0x42, 0x46, 0x3A, 0x02, 0x02, 0x24, 0x18, 0x00, 0x00};
 
 
+/**
+ * @brief 获取DHT22传感器的数据
+ * 
+ * @return void* 
+ */
+void *handle_dht22()
+{
+    int ret, cnt_yes = 0, cnt_err = 0;
+
+    int data[3];
+    int dht22_fd = open(DHT22, O_RDWR);
+    if (dht22_fd < 0)
+    {
+        perror("open dht22_dev driver");
+    }
+
+    //文字显示
+    //温度：
+    lcd_draw_word(w_wen, sizeof(w_wen), 16, BLACK, 660, 70);
+    lcd_draw_word(w_du, sizeof(w_du), 16, BLACK, 676, 70);
+    lcd_draw_word(w_maohao, sizeof(w_maohao), 8, BLACK, 692, 70);
+    // lcd_draw_word(w_dian,sizeof(w_dian),8,BLACK,716,70);
+    lcd_draw_word(w_dufuhao, sizeof(w_dufuhao), 16, BLACK, 732, 70);
+    //湿度：
+    lcd_draw_word(w_shi, sizeof(w_wen), 16, BLACK, 660, 85);
+    lcd_draw_word(w_du, sizeof(w_du), 16, BLACK, 676, 85);
+    lcd_draw_word(w_maohao, sizeof(w_maohao), 8, BLACK, 692, 85);
+    lcd_draw_word(w_baifenhao, sizeof(w_baifenhao), 8, BLACK, 716, 85);
+
+    while (1)
+    {
+        ret = ioctl(dht22_fd, GEC6818_GET_DHTDATA, &data[0]);
+        if (ret != 0)
+        {
+            cnt_err++;
+            perror("GEC6818_GET_DHTDATA error");
+            break;
+        }
+        else
+        {
+            cnt_yes++;
+            printf("app:  Hum= %d  Temprature=%d.%d  err:%d  correct:%d\n", data[0], data[1], data[2], cnt_err, cnt_yes);
+        }
+        diplay_dht22_data(data[0], data[1], data[2]);
+        //根据说明 至少延时2秒获取数据
+        sleep(2);
+    }
+    close(dht22_fd);
+}
+
+/**
+ * @brief 显示DHT22获得的数据
+ *
+ * @param Hum  湿度
+ * @param T    温度
+ * @param T_l  小数点后的温度
+ */
+void diplay_dht22_data(int Hum, int T, int T_l)
+{
+    //清屏
+    lcd_draw_rect(700, 70, 32, 16, BLUE);
+    lcd_draw_rect(700, 85, 32, 16, BLUE);
+
+    //小数
+    lcd_draw_word(w_dian, sizeof(w_dian), 8, BLACK, 716, 70);
+
+    //温度十位
+    int T_decade;
+    //温度个位
+    int T_units;
+    //湿度十位
+    int Hum_decade;
+    //湿度个位
+    int Hum_units;
+
+    T_decade = T % 100 / 10;
+    T_units = T % 10;
+
+    Hum_decade = Hum % 100 / 10;
+    Hum_units = Hum % 10;
+
+    int num[] = {
+        T_decade,
+        T_units,
+        T_l,
+        Hum_decade,
+        Hum_units,
+    };
+
+    switch (num[0])
+    {
+    case 0:
+        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 700, 70);
+        break;
+    case 1:
+        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 700, 70);
+        break;
+    case 2:
+        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 700, 70);
+        break;
+    case 3:
+        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 700, 70);
+        break;
+    case 4:
+        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 700, 70);
+        break;
+    case 5:
+        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 700, 70);
+        break;
+    case 6:
+        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 700, 70);
+        break;
+    case 7:
+        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 700, 70);
+        break;
+    case 8:
+        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 700, 70);
+        break;
+    case 9:
+        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 700, 70);
+        break;
+
+    default:
+        break;
+    }
+
+    switch (num[1])
+    {
+    case 0:
+        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 708, 70);
+        break;
+    case 1:
+        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 708, 70);
+        break;
+    case 2:
+        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 708, 70);
+        break;
+    case 3:
+        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 708, 70);
+        break;
+    case 4:
+        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 708, 70);
+        break;
+    case 5:
+        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 708, 70);
+        break;
+    case 6:
+        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 708, 70);
+        break;
+    case 7:
+        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 708, 70);
+        break;
+    case 8:
+        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 708, 70);
+        break;
+    case 9:
+        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 708, 70);
+        break;
+
+    default:
+        break;
+    }
+    switch (num[2])
+    {
+    case 0:
+        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 724, 70);
+        break;
+    case 1:
+        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 724, 70);
+        break;
+    case 2:
+        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 724, 70);
+        break;
+    case 3:
+        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 724, 70);
+        break;
+    case 4:
+        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 724, 70);
+        break;
+    case 5:
+        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 724, 70);
+        break;
+    case 6:
+        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 724, 70);
+        break;
+    case 7:
+        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 724, 70);
+        break;
+    case 8:
+        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 724, 70);
+        break;
+    case 9:
+        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 724, 70);
+        break;
+
+    default:
+        break;
+    }
+
+    switch (num[3])
+    {
+    case 0:
+        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 700, 85);
+        break;
+    case 1:
+        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 700, 85);
+        break;
+    case 2:
+        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 700, 85);
+        break;
+    case 3:
+        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 700, 85);
+        break;
+    case 4:
+        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 700, 85);
+        break;
+    case 5:
+        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 700, 85);
+        break;
+    case 6:
+        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 700, 85);
+        break;
+    case 7:
+        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 700, 85);
+        break;
+    case 8:
+        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 700, 85);
+        break;
+    case 9:
+        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 700, 85);
+        break;
+
+    default:
+        break;
+    }
+
+    switch (num[4])
+    {
+    case 0:
+        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 708, 85);
+        break;
+    case 1:
+        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 708, 85);
+        break;
+    case 2:
+        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 708, 85);
+        break;
+    case 3:
+        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 708, 85);
+        break;
+    case 4:
+        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 708, 85);
+        break;
+    case 5:
+        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 708, 85);
+        break;
+    case 6:
+        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 708, 85);
+        break;
+    case 7:
+        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 708, 85);
+        break;
+    case 8:
+        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 708, 85);
+        break;
+    case 9:
+        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 708, 85);
+        break;
+
+    default:
+        break;
+    }
+}
+
+#if 0
 /**
  * @description: 处理收到的烟雾数据
  * @param {unsigned int value} 烟雾数据
@@ -536,8 +815,4 @@ void* handle_gy(){
     }
 }
 
-/**
- * @description: 在坐标为x0,y0的位置开始显示一张bmp图片，图片的名字为file,宽度是w，高度是h
- * @param {char *file, int w, int h, int x0, int y0}
- * @return {*}
- */
+#endif

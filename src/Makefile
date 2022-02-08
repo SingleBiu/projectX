@@ -1,16 +1,16 @@
 TARGET := Smarthome
 
-CC := gcc
+CC := arm-linux-gcc
 
-CPP := g++ -std=c++11
+# CPP := g++ -std=c++11
 
 CSRCS :=$(wildcard *.c)
 
-CPPSRCS :=$(wildcard *.cpp)
+# CPPSRCS :=$(wildcard *.cpp)
 
 OBJS := $(patsubst %.c, %.o, $(CSRCS))
 
-OBJS += $(patsubst %.cpp, %.o, $(CPPSRCS))
+# OBJS += $(patsubst %.cpp, %.o, $(CPPSRCS))
 
 INC := -I ./ -I ../INC
 

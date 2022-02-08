@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-12 22:16:39
  * @LastEditors: SingleBiu
- * @LastEditTime: 2021-09-13 10:35:38
+ * @LastEditTime: 2022-02-08 19:10:30
  * @Description: file content
  */
 #ifndef __LCD_H__
@@ -33,8 +33,11 @@
 #define BLACK     0x000000
 #define WHITE     0xffffff
 
-// 模拟屏LCD文件
-#define LCD_FILE "/dev/ubuntu_lcd"
+// // 模拟屏LCD文件
+// #define LCD_FILE "/dev/ubuntu_lcd"
+
+// 帧缓冲设备文件描述符
+#define LCD_FILE "/dev/fb0"
 // 帧缓冲首地址
 static int *plcd = NULL;
 // LCD_FILE的文件描述符

@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-12 22:16:34
  * @LastEditors: SingleBiu
- * @LastEditTime: 2021-09-13 10:36:19
+ * @LastEditTime: 2022-02-08 19:53:53
  * @Description: file content
  */
 #include"lcd.h"
@@ -95,7 +95,7 @@ void lcd_color_check()
 //len: 数组的长度
 //w: 文字的宽度
 //color: 文字的颜色
-//x,y: 显示的起始点的横纵坐标
+//x0,y0: 显示的起始点的横纵坐标
 void lcd_draw_word(char *ch, int len, int w, int color, int x0, int y0)
 {
     int i,j;
