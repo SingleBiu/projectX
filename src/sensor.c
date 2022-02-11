@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-13 09:39:33
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-02-08 20:13:10
+ * @LastEditTime: 2022-02-11 20:25:44
  * @Description: file content
  */
 #include "sensor.h"
@@ -194,189 +194,202 @@ void diplay_dht22_data(int Hum, int T, int T_l)
         Hum_units,
     };
 
-    switch (num[0])
-    {
-    case 0:
-        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 700, 70);
-        break;
-    case 1:
-        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 700, 70);
-        break;
-    case 2:
-        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 700, 70);
-        break;
-    case 3:
-        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 700, 70);
-        break;
-    case 4:
-        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 700, 70);
-        break;
-    case 5:
-        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 700, 70);
-        break;
-    case 6:
-        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 700, 70);
-        break;
-    case 7:
-        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 700, 70);
-        break;
-    case 8:
-        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 700, 70);
-        break;
-    case 9:
-        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 700, 70);
-        break;
+    // 数字 8x16
+    int num_len = sizeof(w_0);
 
-    default:
-        break;
-    }
+    //显示温度
+    display_num(num[0],num_len,8,BLACK,700,70);
+    display_num(num[1],num_len,8,BLACK,708,70);
+    display_num(num[2],num_len,8,BLACK,724,70);
 
-    switch (num[1])
-    {
-    case 0:
-        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 708, 70);
-        break;
-    case 1:
-        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 708, 70);
-        break;
-    case 2:
-        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 708, 70);
-        break;
-    case 3:
-        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 708, 70);
-        break;
-    case 4:
-        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 708, 70);
-        break;
-    case 5:
-        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 708, 70);
-        break;
-    case 6:
-        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 708, 70);
-        break;
-    case 7:
-        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 708, 70);
-        break;
-    case 8:
-        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 708, 70);
-        break;
-    case 9:
-        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 708, 70);
-        break;
+    //显示湿度
+    display_num(num[3],num_len,8,BLACK,700,85);
+    display_num(num[4],num_len,8,BLACK,708,85);
 
-    default:
-        break;
-    }
-    switch (num[2])
-    {
-    case 0:
-        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 724, 70);
-        break;
-    case 1:
-        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 724, 70);
-        break;
-    case 2:
-        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 724, 70);
-        break;
-    case 3:
-        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 724, 70);
-        break;
-    case 4:
-        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 724, 70);
-        break;
-    case 5:
-        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 724, 70);
-        break;
-    case 6:
-        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 724, 70);
-        break;
-    case 7:
-        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 724, 70);
-        break;
-    case 8:
-        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 724, 70);
-        break;
-    case 9:
-        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 724, 70);
-        break;
 
-    default:
-        break;
-    }
+    // switch (num[0])
+    // {
+    // case 0:
+    //     lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 700, 70);
+    //     break;
+    // case 1:
+    //     lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 700, 70);
+    //     break;
+    // case 2:
+    //     lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 700, 70);
+    //     break;
+    // case 3:
+    //     lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 700, 70);
+    //     break;
+    // case 4:
+    //     lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 700, 70);
+    //     break;
+    // case 5:
+    //     lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 700, 70);
+    //     break;
+    // case 6:
+    //     lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 700, 70);
+    //     break;
+    // case 7:
+    //     lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 700, 70);
+    //     break;
+    // case 8:
+    //     lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 700, 70);
+    //     break;
+    // case 9:
+    //     lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 700, 70);
+    //     break;
 
-    switch (num[3])
-    {
-    case 0:
-        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 700, 85);
-        break;
-    case 1:
-        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 700, 85);
-        break;
-    case 2:
-        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 700, 85);
-        break;
-    case 3:
-        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 700, 85);
-        break;
-    case 4:
-        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 700, 85);
-        break;
-    case 5:
-        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 700, 85);
-        break;
-    case 6:
-        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 700, 85);
-        break;
-    case 7:
-        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 700, 85);
-        break;
-    case 8:
-        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 700, 85);
-        break;
-    case 9:
-        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 700, 85);
-        break;
+    // default:
+    //     break;
+    // }
 
-    default:
-        break;
-    }
+    // switch (num[1])
+    // {
+    // case 0:
+    //     lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 708, 70);
+    //     break;
+    // case 1:
+    //     lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 708, 70);
+    //     break;
+    // case 2:
+    //     lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 708, 70);
+    //     break;
+    // case 3:
+    //     lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 708, 70);
+    //     break;
+    // case 4:
+    //     lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 708, 70);
+    //     break;
+    // case 5:
+    //     lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 708, 70);
+    //     break;
+    // case 6:
+    //     lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 708, 70);
+    //     break;
+    // case 7:
+    //     lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 708, 70);
+    //     break;
+    // case 8:
+    //     lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 708, 70);
+    //     break;
+    // case 9:
+    //     lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 708, 70);
+    //     break;
 
-    switch (num[4])
-    {
-    case 0:
-        lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 708, 85);
-        break;
-    case 1:
-        lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 708, 85);
-        break;
-    case 2:
-        lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 708, 85);
-        break;
-    case 3:
-        lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 708, 85);
-        break;
-    case 4:
-        lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 708, 85);
-        break;
-    case 5:
-        lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 708, 85);
-        break;
-    case 6:
-        lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 708, 85);
-        break;
-    case 7:
-        lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 708, 85);
-        break;
-    case 8:
-        lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 708, 85);
-        break;
-    case 9:
-        lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 708, 85);
-        break;
+    // default:
+    //     break;
+    // }
+    // switch (num[2])
+    // {
+    // case 0:
+    //     lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 724, 70);
+    //     break;
+    // case 1:
+    //     lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 724, 70);
+    //     break;
+    // case 2:
+    //     lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 724, 70);
+    //     break;
+    // case 3:
+    //     lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 724, 70);
+    //     break;
+    // case 4:
+    //     lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 724, 70);
+    //     break;
+    // case 5:
+    //     lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 724, 70);
+    //     break;
+    // case 6:
+    //     lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 724, 70);
+    //     break;
+    // case 7:
+    //     lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 724, 70);
+    //     break;
+    // case 8:
+    //     lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 724, 70);
+    //     break;
+    // case 9:
+    //     lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 724, 70);
+    //     break;
 
-    default:
-        break;
-    }
+    // default:
+    //     break;
+    // }
+
+    // switch (num[3])
+    // {
+    // case 0:
+    //     lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 700, 85);
+    //     break;
+    // case 1:
+    //     lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 700, 85);
+    //     break;
+    // case 2:
+    //     lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 700, 85);
+    //     break;
+    // case 3:
+    //     lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 700, 85);
+    //     break;
+    // case 4:
+    //     lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 700, 85);
+    //     break;
+    // case 5:
+    //     lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 700, 85);
+    //     break;
+    // case 6:
+    //     lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 700, 85);
+    //     break;
+    // case 7:
+    //     lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 700, 85);
+    //     break;
+    // case 8:
+    //     lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 700, 85);
+    //     break;
+    // case 9:
+    //     lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 700, 85);
+    //     break;
+
+    // default:
+    //     break;
+    // }
+
+    // switch (num[4])
+    // {
+    // case 0:
+    //     lcd_draw_word(w_0, sizeof(w_0), 8, BLACK, 708, 85);
+    //     break;
+    // case 1:
+    //     lcd_draw_word(w_1, sizeof(w_1), 8, BLACK, 708, 85);
+    //     break;
+    // case 2:
+    //     lcd_draw_word(w_2, sizeof(w_2), 8, BLACK, 708, 85);
+    //     break;
+    // case 3:
+    //     lcd_draw_word(w_3, sizeof(w_3), 8, BLACK, 708, 85);
+    //     break;
+    // case 4:
+    //     lcd_draw_word(w_4, sizeof(w_4), 8, BLACK, 708, 85);
+    //     break;
+    // case 5:
+    //     lcd_draw_word(w_5, sizeof(w_5), 8, BLACK, 708, 85);
+    //     break;
+    // case 6:
+    //     lcd_draw_word(w_6, sizeof(w_6), 8, BLACK, 708, 85);
+    //     break;
+    // case 7:
+    //     lcd_draw_word(w_7, sizeof(w_7), 8, BLACK, 708, 85);
+    //     break;
+    // case 8:
+    //     lcd_draw_word(w_8, sizeof(w_8), 8, BLACK, 708, 85);
+    //     break;
+    // case 9:
+    //     lcd_draw_word(w_9, sizeof(w_9), 8, BLACK, 708, 85);
+    //     break;
+
+    // default:
+    //     break;
+    // }
 }
 
 #if 0

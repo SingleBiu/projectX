@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-12 22:16:39
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-02-08 19:10:30
+ * @LastEditTime: 2022-02-11 20:13:50
  * @Description: file content
  */
 #ifndef __LCD_H__
@@ -48,6 +48,9 @@ void lcd_draw_point(int x,int y,int color);
 void lcd_draw_rect(int x0, int y0, int w, int h, int color);
 void lcd_color_check();
 void lcd_draw_word(char *ch, int len, int w, int color, int x0, int y0);
+void display_num(int num, int lens, int w, int color, int x0, int y0);
+
+
 
 
 #endif
