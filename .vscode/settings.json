@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.go": "go",
+        "*.h": "c",
+        "type_traits": "c",
+        "cmath": "c",
+        "limits": "c",
+        "*.tcc": "c",
+        "typeinfo": "c"
+    }
+}
