@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-13 09:39:33
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-02-11 21:07:32
+ * @LastEditTime: 2022-02-14 18:45:17
  * @Description: file content
  */
 #include "sensor.h"
@@ -208,6 +208,30 @@ void diplay_dht22_data(int Hum, int T, int T_l)
 
 
 }
+
+void beep_init(int fd)//GPIOC14
+{
+	gpio_cfg_t tmp;
+	tmp.gpio_no = GPIO_C+14;
+	tmp.gpio_mode = GPIO_MODE_OUTPUT;
+	tmp.gpio_init_value = BEEP_OFF;
+	// if(ioctl(fd,GPIO_CONFIG,&tmp))
+	// {
+	// 	printf("beep init failed!\n");
+	// }
+}
+
+void beep_ctrl(int fd, int beep_state)
+{
+	gpio_val_t tmp;
+	tmp.gpio_no = GPIO_C+14;
+	tmp.gpio_val = beep_state;
+	if(ioctl(fd,GPIO_SET_VALUE,&tmp))
+	{
+		printf("beep ctrl failed!\n");
+	}
+}
+
 
 #if 0
 /**

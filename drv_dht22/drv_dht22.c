@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2022-01-21 14:19:30
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-01-22 11:02:05
+ * @LastEditTime: 2022-02-14 19:00:49
  * @Description: DHT22 driver
  */
 #include <linux/init.h>
@@ -187,9 +187,9 @@ static long gec6818_dht22_ioctl(struct file *filp, unsigned int cmd, unsigned lo
     temp_l = (dht22_data[2] * 256 + dht22_data[3]) % 10; //温度地位 小数点之后
 
     // DEBUG INFO
-    printk("kdata: u8  th_data = %d %d  temp_data = %d %d\n", dht22_data[0], dht22_data[1], dht22_data[2], dht22_data[3]);
-    printk("kdata:temp_h : %d temp_l : %d\n", temp_h, temp_l);
-    printk("kdata:int th_data = %d  temp_data = %d\n", hum, temp);
+    // printk("kdata: u8  th_data = %d %d  temp_data = %d %d\n", dht22_data[0], dht22_data[1], dht22_data[2], dht22_data[3]);
+    // printk("kdata:temp_h : %d temp_l : %d\n", temp_h, temp_l);
+    // printk("kdata:int th_data = %d  temp_data = %d\n", hum, temp);
 
     ret = copy_to_user(((int *)arg), &hum, sizeof(hum));             //拷贝湿度
     if (ret != 0)

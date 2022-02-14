@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2022-02-13 19:20:23
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-02-13 20:00:39
+ * @LastEditTime: 2022-02-14 19:06:21
  * @Description: file content
  */
 /*
@@ -79,12 +79,12 @@ static long gec6818_fire_detect_ioctl(struct file *filp, unsigned int cmd, unsig
         //无火焰默认高电平
         if (gpio_get_value(FIRE_DATA))    
         {
-            printk("NO fire detected\n");
+            // printk("NO fire detected\n");
             return 0;
         }
         else
         {
-            printk("WARING:Fire detected\n");
+            // printk("WARING:Fire detected\n");
             fire = 1;
             ret = copy_to_user(((int *)arg), &fire, sizeof(fire));             //拷贝结果
             if (ret != 0)
