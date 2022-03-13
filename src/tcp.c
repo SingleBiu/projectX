@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-13 10:53:50
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-03-13 21:26:08
+ * @LastEditTime: 2022-03-13 21:36:18
  * @Description: file content
  */
 #include"tcp.h"
@@ -12,6 +12,7 @@
 // extern int Hum;
 // extern int T;
 
+#if 0
 int create_tcp_socket(const char *serv_ip,short serv_port)
 {
     int sock;
@@ -40,13 +41,42 @@ int create_tcp_socket(const char *serv_ip,short serv_port)
     
     return sock;
 }
+#endif
 
-int tcp_send(int sock)
+int tcp_send(const char *serv_ip,short serv_port)
 {
     int n = 0;
 
     char sendbuf[128];
     char recvbuf[128];
+
+
+    int sock;
+    int ret;
+retry:
+    sock = socket(AF_INET,SOCK_STREAM,0);
+    if (sock == -1)
+    {
+        perror("socket errno");
+        return -1;
+    }
+
+    struct sockaddr_in sa;
+    memset(&sa,0,sizeof(sa));
+    sa.sin_family = AF_INET;
+    sa.sin_port = htons(serv_port);
+    sa.sin_addr.s_addr = inet_addr(serv_ip);
+
+    ret = connect(sock,(struct sockaddr*) &sa,sizeof(sa));
+    if (ret == -1)
+    {
+        perror("connect error");
+        close(sock);
+        //每隔X秒尝试重连
+        sleep(3);
+        goto retry;
+        return -1;
+    }
 
     while (1)
     {

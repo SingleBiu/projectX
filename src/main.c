@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-12 22:16:08
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-03-13 21:26:55
+ * @LastEditTime: 2022-03-13 21:35:25
  * @Description: file content
  */
 #include"lcd.h"
@@ -33,18 +33,24 @@ int main(int argc, char const *argv[])
     pthread_create(&p2,NULL,handle_fire_detect,NULL);
 
     //TODO: 将ip和端口写入配置文件自动读取
-    int sock = create_tcp_socket(argv[1],atoi(argv[2]));
+    // int sock = create_tcp_socket(argv[1],atoi(argv[2]));
 
     while (1)
     {
         // printf("Hum= %d Temprature= %d.%d\n",data[0],data[1],data[2]);
 
         // 0 正常 | 非 0失败
-        if(tcp_send(sock))
+        // if(tcp_send(sock))
+        // {
+        //     printf("tcp send error\n");
+        //     break;
+        // }
+
+        if (tcp_send(argv[1],atoi(argv[2])))
         {
-            printf("tcp send error\n");
-            break;
+            /* code */
         }
+        
     }
 
     pthread_join(p1,NULL);

@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-13 10:53:56
  * @LastEditors: SingleBiu
- * @LastEditTime: 2021-09-13 11:14:45
+ * @LastEditTime: 2022-03-13 21:34:55
  * @Description: file content
  */
 #ifndef __TCP_H__
@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-int create_tcp_socket(const char *serv_ip,short serv_port);
-int tcp_send(int sock);
+// int create_tcp_socket(const char *serv_ip,short serv_port);
+int tcp_send(const char *serv_ip,short serv_port);
 
 #endif
