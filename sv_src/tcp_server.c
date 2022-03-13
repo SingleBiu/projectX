@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-08-31 20:26:58
  * @LastEditors: SingleBiu
- * @LastEditTime: 2021-09-13 11:20:22
+ * @LastEditTime: 2022-03-13 17:45:00
  * @Description: file content
  */
 #include<stdio.h>
@@ -55,6 +55,7 @@ int creat_tcp_socket(char *ip,short port)
 
 void handle_connection(int conn_fd)
 {
+    int n = 0;
     char sendbuf[128];
     char recvbuf[128];
     memset(sendbuf,0,sizeof(sendbuf));
@@ -62,9 +63,18 @@ void handle_connection(int conn_fd)
     
     while (1)
     {
-        recv(conn_fd,recvbuf,sizeof(recvbuf),0);
-        sprintf(sendbuf,"%s","TCP recv OK!");
+        n = recv(conn_fd,recvbuf,sizeof(recvbuf),0);
+        sprintf(sendbuf,"%s","Data recv OK!");
         send(conn_fd,sendbuf,sizeof(sendbuf),0);
+
+        if (n == 0)
+        {
+            //conn_fd closed by the client
+            close(conn_fd);
+            printf("Client exit\n");
+            break;
+        }
+        
         printf("recv: %s\n",recvbuf);
         printf("send: %s\n",sendbuf);
         
