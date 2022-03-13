@@ -2,15 +2,15 @@
  * @Author: SingleBiu
  * @Date: 2021-09-13 10:53:50
  * @LastEditors: SingleBiu
- * @LastEditTime: 2021-09-13 11:20:47
+ * @LastEditTime: 2022-03-13 21:26:08
  * @Description: file content
  */
 #include"tcp.h"
+#include"sensor.h"
 
-
-extern int value;
-extern int Hum;
-extern int T;
+// extern int value;
+// extern int Hum;
+// extern int T;
 
 int create_tcp_socket(const char *serv_ip,short serv_port)
 {
@@ -43,12 +43,7 @@ int create_tcp_socket(const char *serv_ip,short serv_port)
 
 int tcp_send(int sock)
 {
-    // int sock = create_tcp_socket(serv_ip,serv_port);
-    // if (sock == -1)
-    // {
-    //     printf("failed to create tcp socket\n");
-    //     return -1;
-    // }
+    int n = 0;
 
     char sendbuf[128];
     char recvbuf[128];
@@ -59,16 +54,37 @@ int tcp_send(int sock)
         memset(sendbuf,0,sizeof(sendbuf));
         memset(recvbuf,0,sizeof(recvbuf));
 
-        sprintf(sendbuf,"##smoke:%d,temprature:%d,hum:%d##",value,T,Hum);
+        sprintf(sendbuf,"##Hum:%d,Temprature:%d.%d,Fire_state:%d##",data[0],data[1],data[2],fire_state);
+        // printf("Hum= %d Temprature= %d.%d\n",data[0],data[1],data[2]);
+        // sprintf(sendbuf,"##smoke:%d,temprature:%d,hum:%d##",value,T,Hum);
+
         // 发送
         send(sock,sendbuf,sizeof(sendbuf),0);
-        printf("send: %s\n",sendbuf);
+        // printf("send: %s\n",sendbuf);
+
+        // 重置信号量
+        sem_post(&semDHT);
+        sem_post(&semFire);
+        //确保火焰信息发出再重置状态
+        fire_state = 0;
 
         // 接收
-        recv(sock,recvbuf,sizeof(recvbuf),0);
+        n = recv(sock,recvbuf,sizeof(recvbuf),0);
+        if (n == 0)
+        {
+            printf("Server terminated prematually\n");
+            break;
+        }
+        else if (n < -1)
+        {
+            
+        }
+        
         printf("received: %s\n",recvbuf);
-        sleep(3);
+        
+        sleep(2);
 
     }
-    return 0;
+
+    return -1;
 }

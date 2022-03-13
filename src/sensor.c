@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-13 09:39:33
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-02-14 18:45:17
+ * @LastEditTime: 2022-03-13 21:05:49
  * @Description: file content
  */
 #include "sensor.h"
@@ -114,7 +114,7 @@ void *handle_dht22()
 {
     int ret, cnt_yes = 0, cnt_err = 0;
 
-    int data[3];
+    // int data[3];
     int dht22_fd = open(DHT22, O_RDWR);
     if (dht22_fd < 0)
     {
@@ -136,21 +136,26 @@ void *handle_dht22()
 
     while (1)
     {
+        //等待信号
+        sem_wait(&semDHT);
+
         ret = ioctl(dht22_fd, GEC6818_GET_DHTDATA, &data[0]);
         if (ret != 0)
         {
-            cnt_err++;
+            // cnt_err++;
             perror("GEC6818_GET_DHTDATA error");
             break;
         }
         else
         {
-            cnt_yes++;
-            printf("app:  Hum= %d  Temprature=%d.%d  err:%d  correct:%d\n", data[0], data[1], data[2], cnt_err, cnt_yes);
+            // cnt_yes++;
+            // printf("app:  Hum= %d  Temprature=%d.%d  err:%d  correct:%d\n", data[0], data[1], data[2], cnt_err, cnt_yes);
         }
-        diplay_dht22_data(data[0], data[1], data[2]);
+
         //根据说明 至少延时2秒获取数据
         sleep(2);
+        
+        diplay_dht22_data(data[0], data[1], data[2]);
     }
     close(dht22_fd);
 }
@@ -165,8 +170,8 @@ void *handle_dht22()
 void diplay_dht22_data(int Hum, int T, int T_l)
 {
     //清屏
-    lcd_draw_rect(700, 70, 32, 16, BLUE);
-    lcd_draw_rect(700, 85, 32, 16, BLUE);
+    lcd_draw_rect(700, 70, 32, 16, WHITE);
+    lcd_draw_rect(700, 85, 32, 16, WHITE);
 
     //小数
     lcd_draw_word(w_dian, sizeof(w_dian), 8, BLACK, 716, 70);
@@ -228,10 +233,68 @@ void beep_ctrl(int fd, int beep_state)
 	tmp.gpio_val = beep_state;
 	if(ioctl(fd,GPIO_SET_VALUE,&tmp))
 	{
-		printf("beep ctrl failed!\n");
+		perror("beep ctrl failed!\n");
 	}
 }
 
+void keep_beep(int beep_fd)
+{
+    int i = 1;
+    while (i--)
+    {
+        beep_ctrl(beep_fd,BEEP_ON);
+        sleep(1);
+        beep_ctrl(beep_fd,BEEP_OFF);
+    }
+    //火焰消失确保不会持续蜂鸣
+    beep_ctrl(beep_fd,BEEP_OFF);
+}
+
+void *handle_fire_detect()
+{
+    //打开蜂鸣器 BEEP
+    int beep_fd = open(BEEP_FD,O_RDWR);
+    if(beep_fd == -1)
+	{
+		perror("beep open failed!\n");
+	}
+    beep_init(beep_fd);
+
+    //打开火焰传感器 FIRE_DETECT
+    int ret;
+    int fire_fd = open(FIRE_DETECT,O_RDWR);
+    if (fire_fd < 0)
+    {
+        perror("fire detect open failed!\n");
+    }
+
+    while (1)
+	{
+        //等待信号
+        sem_wait(&semFire);
+		ret = ioctl(fire_fd, GEC6818_GET_FIREDATA, &fire_state);
+		if (ret != 0)
+		{
+			perror("GEC6818_GET_FIREDATA error");
+		}
+		else
+		{
+			// printf("app: Fire_detect:%d\n", fire_state);
+
+            if(fire_state == 1)
+            {
+                // beep_ctrl(beep_fd,BEEP_ON);
+                // sleep(1);
+                // beep_ctrl(beep_fd,BEEP_OFF);
+                keep_beep(beep_fd);
+            }
+            // beep_ctrl(beep_fd,BEEP_OFF);
+		}
+	}
+    
+	close(fire_fd);
+	close(beep_fd);
+}
 
 #if 0
 /**
