@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-12 22:16:08
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-03-13 21:35:25
+ * @LastEditTime: 2022-03-20 20:08:13
  * @Description: file content
  */
 #include"lcd.h"
@@ -15,7 +15,7 @@
 #include<pthread.h>
 #include<semaphore.h>
 
-
+#define NET_CFG_FILE "net.conf"
 
 int main(int argc, char const *argv[])
 {
@@ -28,12 +28,16 @@ int main(int argc, char const *argv[])
     sem_init(&semDHT,0,1);
     // sem_init(&semFire,0,1);
 
+    //从配置文件中读取服务器ip和端口号
+    char servIp[15];
+    char servPort[5];
+    FILE* cfgFp = fopen(NET_CFG_FILE,"r");
+    fscanf(cfgFp,"%s",servIp);
+    fscanf(cfgFp,"%s",servPort);
+
     pthread_t p1,p2;
     pthread_create(&p1,NULL,handle_dht22,NULL);
     pthread_create(&p2,NULL,handle_fire_detect,NULL);
-
-    //TODO: 将ip和端口写入配置文件自动读取
-    // int sock = create_tcp_socket(argv[1],atoi(argv[2]));
 
     while (1)
     {
@@ -46,10 +50,15 @@ int main(int argc, char const *argv[])
         //     break;
         // }
 
-        if (tcp_send(argv[1],atoi(argv[2])))
+        if (tcp_send(servIp,atoi(servPort)))
         {
             /* code */
         }
+
+        // if (tcp_send(argv[1],atoi(argv[2])))
+        // {
+        //     /* code */
+        // }
         
     }
 
