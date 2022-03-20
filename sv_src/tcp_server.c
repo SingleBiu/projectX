@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-08-31 20:26:58
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-03-13 17:45:00
+ * @LastEditTime: 2022-03-20 20:25:33
  * @Description: file content
  */
 #include<stdio.h>
@@ -15,6 +15,12 @@
 #include<string.h>
 #include<arpa/inet.h>
 #include<netinet/in.h>
+
+#include"sql.h"
+
+#define NET_CFG_FILE "net.conf"
+char *wday[]={"Sun","Mon","Tue","Wed","Thu","Fri","Sat"}; 
+
 
 int creat_tcp_socket(char *ip,short port)
 {
@@ -76,7 +82,9 @@ void handle_connection(int conn_fd)
         }
         
         printf("recv: %s\n",recvbuf);
-        printf("send: %s\n",sendbuf);
+        // printf("send: %s\n",sendbuf);
+        //解析信息并插入数据库
+        handle_db(recvbuf);
         
         memset(sendbuf,0,sizeof(sendbuf));
         memset(recvbuf,0,sizeof(recvbuf));
@@ -85,7 +93,14 @@ void handle_connection(int conn_fd)
 
 int main(int argc, char *argv[])
 {
-    int sock = creat_tcp_socket(argv[1],atoi(argv[2]));
+    //从配置文件中读取服务器ip和端口号
+    char servIp[15];
+    char servPort[5];
+    FILE* cfgFp = fopen(NET_CFG_FILE,"r");
+    fscanf(cfgFp,"%s",servIp);
+    fscanf(cfgFp,"%s",servPort);
+
+    int sock = creat_tcp_socket(servIp,atoi(servPort));
     if (sock == -1)
     {
         printf("failed to create tcp socket\n");

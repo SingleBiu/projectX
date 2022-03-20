@@ -8,10 +8,10 @@ OBJS := $(patsubst %.c, %.o, $(CSRCS))
 
 #INC := -I ./
 
-#LIBS := -l
+LIBS := -lsqlite3
 
 $(TARGET):$(OBJS)
-	$(CC) $^ -o $@
+	$(CC) $^ $(LIBS) -o $@ 
 
 %.o:%.c
 	$(CC) -c $< $(INC) -o $@

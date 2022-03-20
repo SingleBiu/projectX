@@ -2,7 +2,7 @@
  * @Author: SingleBiu
  * @Date: 2021-09-13 10:53:50
  * @LastEditors: SingleBiu
- * @LastEditTime: 2022-03-13 21:36:18
+ * @LastEditTime: 2022-03-20 16:51:36
  * @Description: file content
  */
 #include"tcp.h"
@@ -84,7 +84,7 @@ retry:
         memset(sendbuf,0,sizeof(sendbuf));
         memset(recvbuf,0,sizeof(recvbuf));
 
-        sprintf(sendbuf,"##Hum:%d,Temprature:%d.%d,Fire_state:%d##",data[0],data[1],data[2],fire_state);
+        sprintf(sendbuf,"##Hum:%d:Temprature:%d.%d:Fire_state:%d:##",data[0],data[1],data[2],fire_state);
         // printf("Hum= %d Temprature= %d.%d\n",data[0],data[1],data[2]);
         // sprintf(sendbuf,"##smoke:%d,temprature:%d,hum:%d##",value,T,Hum);
 
